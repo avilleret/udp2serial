@@ -43,7 +43,7 @@ while True:
         if udp_socket in rlist:
                 udp_data,udp_client = udp_socket.recvfrom(MAX_UDP_PACKET)
                 slip_data=slip_processor.encode(udp_data)
-                serial.write(slip_data)
+                serial.write(slip_data.encode())
                 serial.flush()
                 udp_client_address=(udp_client[0],UDP_PORT_OUT)
                 time.sleep(0.001) #avoid flooding the microcontroller (to be controlled)

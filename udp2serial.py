@@ -1,11 +1,18 @@
 import socket,select,tty
 import slip
 import time
+import serial
+import platform
 
 UDP_PORT_IN = 10000 # UDP server port
 UDP_PORT_OUT = 11000
-MAX_UDP_PACKET=512 # max size of incoming packet to avoid sending too much data to the micro
-SERIAL_PORT='/dev/ttyATH0'
+MAX_UDP_PACKET=4096 # max size of incoming packet to avoid sending too much data to the micro
+plat = platform.system()
+if plat == "Linux":
+    SERIAL_PORT='/dev/ttyACM0'
+elif plat == "Darwin":
+    SERIAL_PORT='/dev/tty.usbmodem1235431'
+
 BROADCAST_MODE=False #set to True if you want a broadcast replay instead of unicast
 
 

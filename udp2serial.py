@@ -20,7 +20,11 @@ udp_client_address=('127.0.0.1',UDP_PORT_OUT) #where to forward packets coming f
 udp_server_address = ('',UDP_PORT_IN) #udp server
 udp_broadcast=('<broadcast>',UDP_PORT_OUT) #broadcast address
 
-serial=open(SERIAL_PORT,'r+b') #open the file corrisponding to YUN serial port
+#serial=open(SERIAL_PORT,'r+b') #open the file corrisponding to YUN serial port
+serial = serial.Serial(
+    port=SERIAL_PORT,
+    baudrate=921600)
+
 tty.setraw(serial) #this avoids the terminal to change bytes with value 10 in 13 10
 
 udp_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)

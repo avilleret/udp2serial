@@ -3,6 +3,7 @@ import slip
 import time
 import serial
 import platform
+import glob
 
 UDP_PORT_IN = 10000 # UDP server port
 UDP_PORT_OUT = 11000
@@ -11,7 +12,7 @@ plat = platform.system()
 if plat == "Linux":
     SERIAL_PORT='/dev/ttyACM0'
 elif plat == "Darwin":
-    SERIAL_PORT='/dev/tty.usbmodem1235431'
+    SERIAL_PORT=glob.glob("/dev/tty.usbmodem*")[0] # select the first available modem, please not we are no clue that this is a Teensy
 
 BROADCAST_MODE=False #set to True if you want a broadcast replay instead of unicast
 
@@ -29,7 +30,7 @@ tty.setraw(serial) #this avoids the terminal to change bytes with value 10 in 13
 
 udp_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 udp_socket.bind(udp_server_address)
-if BROADCAST_MODE: 
+if BROADCAST_MODE:
         udp_socket.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)
 
 slip_processor=slip.slip()
@@ -44,8 +45,8 @@ while True:
                         if BROADCAST_MODE:
                                 udp_socket.sendto(packet,udp_broadcast)
                         else:
-                                udp_socket.sendto(packet,udp_client_address)        
-                                
+                                udp_socket.sendto(packet,udp_client_address)
+
         if udp_socket in rlist:
                 udp_data,udp_client = udp_socket.recvfrom(MAX_UDP_PACKET)
                 slip_data=slip_processor.encode(udp_data)
